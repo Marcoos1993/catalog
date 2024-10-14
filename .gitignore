@@ -1,0 +1,10 @@
+# Ignorar arquivos de log
+*.log
+
+# Ignorar diretórios de compilação
+target/
+bin/
+
+# Ignorar arquivos de configuração do sistema
+.DS_Store
+
