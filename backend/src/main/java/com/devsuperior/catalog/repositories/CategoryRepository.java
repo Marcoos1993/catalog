@@ -9,5 +9,5 @@ import com.devsuperior.catalog.entities.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long>{
 	
 	public List<Category> findAll();
-
+	
 }
