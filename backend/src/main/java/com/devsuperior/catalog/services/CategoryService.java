@@ -12,6 +12,8 @@ import com.devsuperior.catalog.entities.Category;
 import com.devsuperior.catalog.repositories.CategoryRepository;
 import com.devsuperior.catalog.services.exceptions.EntityNotFoundException;
 
+import jakarta.validation.Valid;
+
 @Service
 public class CategoryService {
 
@@ -23,11 +25,20 @@ public class CategoryService {
 		List<Category> list = categoryRepository.findAll();
 		return list.stream().map(x -> new CategoryDTO(x)).toList();	
 	}
-
+	
+	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = categoryRepository.findById(id);
 		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
 
 		return new CategoryDTO(entity);
+	}
+	
+	@Transactional
+	public CategoryDTO insert(@Valid CategoryDTO dto) {
+		Category cat = new Category();
+		cat.setName(dto.getName());
+		cat = categoryRepository.save(cat);
+		return new CategoryDTO(cat);
 	}
 }
