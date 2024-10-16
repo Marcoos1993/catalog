@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.catalog.dto.CategoryDTO;
 import com.devsuperior.catalog.entities.Category;
 import com.devsuperior.catalog.repositories.CategoryRepository;
+import com.devsuperior.catalog.services.exceptions.DatabaseException;
 import com.devsuperior.catalog.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -54,5 +57,18 @@ public class CategoryService {
 		catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id number " + id +  " not found");
 		}
+	}
+
+	public void delete(Long id) {
+		if(!categoryRepository.existsById(id)) {
+			throw new ResourceNotFoundException("Category " + id + " not found");
+		}
+		try {
+        	categoryRepository.deleteById(id);    		
+	}
+    	catch (DataIntegrityViolationException e) {
+        	throw new DatabaseException("Integrity violation");
+   	}
+		
 	}
 }
