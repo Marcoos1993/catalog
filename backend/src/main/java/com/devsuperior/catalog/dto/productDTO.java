@@ -9,7 +9,7 @@ import java.util.Set;
 import com.devsuperior.catalog.entities.Category;
 import com.devsuperior.catalog.entities.Product;
 
-public class productDTO implements Serializable {
+public class ProductDTO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private Long id;
@@ -21,10 +21,10 @@ public class productDTO implements Serializable {
 
 	private List<CategoryDTO> categories = new ArrayList<>();
 	
-	public productDTO() {
+	public ProductDTO() {
 	}
 
-	public productDTO(Long id, String name, String description, Double price, String imgUrl, Date date) {
+	public ProductDTO(Long id, String name, String description, Double price, String imgUrl, Date date) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -33,7 +33,7 @@ public class productDTO implements Serializable {
 		this.date = date;
 	}
 	
-	public productDTO(Product entity) {
+	public ProductDTO(Product entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.description = entity.getDescription();
@@ -43,7 +43,7 @@ public class productDTO implements Serializable {
 		
 	}
 	
-	public productDTO(Product entity, Set<Category> categories) {
+	public ProductDTO(Product entity, Set<Category> categories) {
 		this(entity);
 		categories.forEach(x -> this.categories.add(new CategoryDTO(x)));
 		}

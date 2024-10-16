@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.devsuperior.catalog.dto.CategoryDTO;
-import com.devsuperior.catalog.entities.Category;
 import com.devsuperior.catalog.services.CategoryService;
 
 import jakarta.validation.Valid;
@@ -30,10 +29,6 @@ public class CategoryController {
 	
 	@Autowired
 	private CategoryService categoryService;
-
-	public ResponseEntity<Category> findByid(){
-		return null;
-	}
 
 	@GetMapping
 	public ResponseEntity<Page<CategoryDTO>> findAll(
