@@ -41,11 +41,7 @@ public class ProductService {
 	public ProductDTO update(Long id,@Valid ProductDTO dto) {
 		try {
 		Product product = productRepository.getReferenceById(id);
-		product.setName(dto.getName());
-		product.setDescription(dto.getDescription());
-		product.setPrice(dto.getPrice());
-		product.setImgUrl(dto.getImgUrl());
-		
+		copyToEntity(product, dto);	
 		product = productRepository.save(product);
 		
 		return new ProductDTO(product);
@@ -54,6 +50,21 @@ public class ProductService {
 					throw new ResourceNotFoundException("Id number " + id +  " not found");
 				}
 		}
+
+	public ProductDTO insert(@Valid ProductDTO dto) {
+		Product product = new Product();
+		copyToEntity(product, dto);
+		product = productRepository.save(product);
+		
+		return new ProductDTO(product);
+	}
+	
+	public void copyToEntity(Product product, ProductDTO dto) {
+		product.setName(dto.getName());
+		product.setDescription(dto.getDescription());
+		product.setPrice(dto.getPrice());
+		product.setImgUrl(dto.getImgUrl());
+	}
 
 }
 
