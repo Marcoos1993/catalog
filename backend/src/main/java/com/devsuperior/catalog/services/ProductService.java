@@ -13,6 +13,9 @@ import com.devsuperior.catalog.entities.Product;
 import com.devsuperior.catalog.repositories.ProductRepository;
 import com.devsuperior.catalog.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+
 @Service
 public class ProductService {
 
@@ -26,12 +29,31 @@ public class ProductService {
 
 		return new ProductDTO(entity);
 	}
-
+	
+	@Transactional(readOnly = true)
 	public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
 		Page<Product> products = productRepository.findAll(pageRequest);
 
 		return products.map(x -> new ProductDTO(x));
 	}
-
+	
+	@Transactional
+	public ProductDTO update(Long id,@Valid ProductDTO dto) {
+		try {
+		Product product = productRepository.getReferenceById(id);
+		product.setName(dto.getName());
+		product.setDescription(dto.getDescription());
+		product.setPrice(dto.getPrice());
+		product.setImgUrl(dto.getImgUrl());
+		
+		product = productRepository.save(product);
+		
+		return new ProductDTO(product);
+		}
+		catch(EntityNotFoundException e) {
+					throw new ResourceNotFoundException("Id number " + id +  " not found");
+				}
+		}
 
 }
+
