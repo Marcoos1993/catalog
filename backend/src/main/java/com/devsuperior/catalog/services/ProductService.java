@@ -3,6 +3,7 @@ package com.devsuperior.catalog.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsuperior.catalog.dto.ProductDTO;
 import com.devsuperior.catalog.entities.Product;
 import com.devsuperior.catalog.repositories.ProductRepository;
+import com.devsuperior.catalog.services.exceptions.DatabaseException;
 import com.devsuperior.catalog.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -64,6 +66,18 @@ public class ProductService {
 		product.setDescription(dto.getDescription());
 		product.setPrice(dto.getPrice());
 		product.setImgUrl(dto.getImgUrl());
+	}
+
+	public void delete(Long id) {
+		if(!productRepository.existsById(id)) {
+			throw new ResourceNotFoundException ("Product " + id + "not found");
+		}
+		try {
+			productRepository.deleteById(id);
+		}
+    	catch (DataIntegrityViolationException e) {
+        	throw new DatabaseException("Integrity violation");
+    	}
 	}
 
 }
