@@ -48,13 +48,13 @@ public class ProductService {
 	}
 	
 	@Transactional
-	public ProductDTO update(Long id,@Valid ProductDTO dto) {
+	public ProductDTO update(Long id, ProductDTO dto) {
 		try {
-		Product product = productRepository.getOne(id);
-		copyToEntity(product, dto);	
-		product = productRepository.save(product);
-		
-		return new ProductDTO(product);
+			Product product = productRepository.getReferenceById(id);
+			copyToEntity(product, dto);	
+			product = productRepository.save(product);
+			
+			return new ProductDTO(product);
 		}
 		catch(EntityNotFoundException e) {
 					throw new ResourceNotFoundException("Id number " + id +  " not found");
@@ -83,7 +83,6 @@ public class ProductService {
     	}
 	}
 	
-	
 	private void copyToEntity(Product product, ProductDTO dto) {
 		product.setName(dto.getName());
 		product.setDescription(dto.getDescription());
@@ -92,11 +91,10 @@ public class ProductService {
 
 		product.getCategories().clear();
 		for(CategoryDTO dtos : dto.getCategories()) {
-			Set<Category> cats = new HashSet<>();
-			Category cat = categoryRepository.getOne(dtos.getId());
+			//Set<Category> cats = new HashSet<>();
+			Category cat = categoryRepository.getReferenceById(dtos.getId());
 			product.getCategories().add(cat);
 		}
-		
 	}
 
 }
