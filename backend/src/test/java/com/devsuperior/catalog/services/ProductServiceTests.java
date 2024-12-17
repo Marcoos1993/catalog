@@ -51,7 +51,7 @@ public class ProductServiceTests {
 
 	
 	@BeforeEach
-	void setUo() throws Exception {
+	void setUp() throws Exception {
 		existingId = 1L;
 		nonExistingId = 1000L;
 		dependentId = 3L;
@@ -89,7 +89,7 @@ public class ProductServiceTests {
 	}
 	
 	@Test
-	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdExists() {
+	public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
 		
 		Assertions.assertThrows(ResourceNotFoundException.class, () -> {
 			service.findById(nonExistingId);
