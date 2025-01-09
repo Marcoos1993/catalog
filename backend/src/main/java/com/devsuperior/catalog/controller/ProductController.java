@@ -22,7 +22,7 @@ import com.devsuperior.catalog.services.ProductService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/producties")
+@RequestMapping(value = "/products")
 public class ProductController {
 
 	@Autowired
