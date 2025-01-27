@@ -1,49 +1,39 @@
-package com.devsuperior.catalog.entities;
+package com.devsuperior.catalog.dto;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import com.devsuperior.catalog.entities.User;
 
-@Entity
-@Table(name = "tb_user")
-public class User implements Serializable{
+public class UserDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String password;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tb_user_role",
-	joinColumns = @JoinColumn(name = "user_id"),
-	inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles = new HashSet<>();
+	Set<RoleDTO> roles = new HashSet<>();
 	
-	public User() {
+	public UserDTO() {
 	}
 
-	public User(Long id, String firstName, String lastName, String email, String password) {
+	public UserDTO(Long id, String firstName, String lastName, String email) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.password = password;
+	}
+	
+	public UserDTO(User entity) {
+		id = entity.getId();
+		firstName = entity.getFirstName();
+		lastName = entity.getLastName();
+		email = entity.getEmail();
+		entity.getRoles().forEach(role -> this.roles.add(new RoleDTO(role)));
 	}
 
 	public Long getId() {
@@ -76,17 +66,9 @@ public class User implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
+	} 
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Set<Role> getRoles() {
+	public Set<RoleDTO> getRoles() {
 		return roles;
 	}
 
@@ -103,10 +85,8 @@ public class User implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		UserDTO other = (UserDTO) obj;
 		return Objects.equals(id, other.id);
 	}
 
-
-	
 }
