@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.catalog.dto.RoleDTO;
 import com.devsuperior.catalog.dto.UserDTO;
+import com.devsuperior.catalog.dto.UserInsertDTO;
 import com.devsuperior.catalog.entities.Role;
 import com.devsuperior.catalog.entities.User;
 import com.devsuperior.catalog.repositories.RoleRepository;
@@ -30,10 +32,13 @@ public class UserService {
 	@Autowired
 	private RoleRepository roleRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncolder;
+	
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
-		Optional<User> product = userRepository.findById(id);
-		User entity = product.orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
+		Optional<User> user = userRepository.findById(id);
+		User entity = user.orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found"));
 
 		return new UserDTO(entity);
 	}
@@ -60,9 +65,10 @@ public class UserService {
 		}
 
 	@Transactional
-	public UserDTO insert(@Valid UserDTO dto) {
+	public UserDTO insert(@Valid UserInsertDTO dto) {
 		User entity = new User();
 		copyToEntity(entity, dto);
+		entity.setPassword(passwordEncolder.encode(dto.getPassword()));
 		entity = userRepository.save(entity);
 		
 		return new UserDTO(entity);
